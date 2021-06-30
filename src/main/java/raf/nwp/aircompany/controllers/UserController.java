@@ -22,5 +22,9 @@ public class UserController {
         return ResponseEntity.ok(allUsers);
     }
 
-
+    @GetMapping(params = "username")
+    public ResponseEntity<?> getUserByUsername(String username) {
+        var user = userService.findUserByUsername(username);
+        return ResponseEntity.of(user);
+    }
 }
