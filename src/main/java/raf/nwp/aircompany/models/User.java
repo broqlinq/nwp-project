@@ -1,26 +1,42 @@
 package raf.nwp.aircompany.models;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
 public class User {
-    private Integer id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String username;
+
     private String password;
+
+    @Enumerated(value = EnumType.STRING)
     private Type type;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Booking> bookings;
 
     public User() {
     }
 
-    public User(Integer id, String username, String password, Type type) {
+    public User(Long id, String username, String password, Type type, List<Booking> bookings) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.type = type;
+        this.bookings = bookings;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -46,6 +62,25 @@ public class User {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public List<Booking> getReservations() {
+        return bookings;
+    }
+
+    public void setReservations(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", type=" + type +
+                ", bookings=" + ((bookings != null) ? bookings.size() : null) +
+                '}';
     }
 
     public enum Type { ADMIN, REGULAR }
