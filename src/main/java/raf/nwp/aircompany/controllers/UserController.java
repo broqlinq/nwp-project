@@ -21,4 +21,6 @@ public class UserController {
         var allUsers = userService.findAllUsers();
         return ResponseEntity.ok(allUsers);
     }
+
+
 }

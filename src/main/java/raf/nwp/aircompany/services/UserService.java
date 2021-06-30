@@ -18,7 +18,7 @@ public class UserService {
     public List<UserDto> findAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(UserDto::fromUser)
+                .map(Mappers::userToDto)
                 .toList();
     }
 }
