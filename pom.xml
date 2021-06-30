@@ -12,11 +12,16 @@
     <artifactId>air-company</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>air-company</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Projekat iz Naprednog Web programiranja</description>
     <properties>
         <java.version>16</java.version>
     </properties>
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
