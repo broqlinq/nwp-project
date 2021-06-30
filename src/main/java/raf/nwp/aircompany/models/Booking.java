@@ -19,7 +19,7 @@ public class Booking {
     private Ticket ticket;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn
+    @JoinColumn(nullable = false)
     private User user;
 
     public Booking() {
