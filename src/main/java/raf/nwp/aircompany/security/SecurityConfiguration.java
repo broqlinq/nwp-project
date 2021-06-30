@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import raf.nwp.aircompany.services.UserAuthService;
 
 @EnableWebSecurity
@@ -16,8 +17,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserAuthService userAuthService;
 
-    public SecurityConfiguration(UserAuthService userAuthService) {
+    private final JwtRequestFilter jwtRequestFilter;
+
+    public SecurityConfiguration(UserAuthService userAuthService, JwtRequestFilter jwtRequestFilter) {
         this.userAuthService = userAuthService;
+        this.jwtRequestFilter = jwtRequestFilter;
     }
 
     @Override
@@ -27,16 +31,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // Disable CSRF
         http.csrf().disable();
 
-        //
         http.authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
