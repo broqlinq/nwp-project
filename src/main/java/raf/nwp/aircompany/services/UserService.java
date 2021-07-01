@@ -1,6 +1,5 @@
 package raf.nwp.aircompany.services;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import raf.nwp.aircompany.dtos.UserDto;
@@ -36,7 +35,7 @@ public class UserService {
                 .map(Mappers::userToDto);
     }
 
-    public UserDto register(UserRegisterForm registerForm) {
+    public UserDto registerUser(UserRegisterForm registerForm) {
         var user = userRepository.findByUsername(registerForm.username());
         if (user.isPresent())
             throw new ExistingUsernameException(registerForm.username());
@@ -45,7 +44,7 @@ public class UserService {
         return Mappers.userToDto(userRepository.save(newUser));
     }
 
-    public UserDto update(UserRegisterForm registerForm) {
+    public UserDto updateUser(UserRegisterForm registerForm) {
         var user = userRepository.findByUsername(registerForm.username())
                 .orElseThrow(() -> new NotFoundException("No user with username `" + registerForm.username() + "` was found"));
 
@@ -63,7 +62,7 @@ public class UserService {
         return Mappers.userToDto(user);
     }
 
-    public UserDto delete(Long id) {
+    public UserDto deleteDelete(Long id) {
         var user = userRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("No user with id `" + id + "` was found"));

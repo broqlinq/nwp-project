@@ -1,8 +1,10 @@
 package raf.nwp.aircompany.services;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import raf.nwp.aircompany.dtos.CompanyDto;
 import raf.nwp.aircompany.dtos.UserDto;
 import raf.nwp.aircompany.dtos.UserRegisterForm;
+import raf.nwp.aircompany.models.Company;
 import raf.nwp.aircompany.models.User;
 
 import java.util.List;
@@ -20,5 +22,13 @@ public class Mappers {
                 passwordEncoder.encode(registerForm.password()),
                 registerForm.type(),
                 (registerForm.type() == User.Type.REGULAR) ? List.of() : null);
+    }
+
+    public static CompanyDto companyToDto(Company company) {
+        return new CompanyDto(company.getName());
+    }
+
+    public static Company dtoToCompany(CompanyDto companyDto) {
+        return new Company(null, companyDto.name());
     }
 }

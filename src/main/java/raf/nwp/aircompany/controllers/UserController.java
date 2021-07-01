@@ -10,7 +10,7 @@ import raf.nwp.aircompany.services.UserService;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(path = "users")
+@RequestMapping(path = "user")
 public class UserController {
 
     private final UserService userService;
@@ -34,7 +34,7 @@ public class UserController {
     @PostMapping(path = "register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegisterForm registerForm) {
         try {
-            return ResponseEntity.ok(userService.register(registerForm));
+            return ResponseEntity.ok(userService.registerUser(registerForm));
         } catch (ExistingUsernameException e) {
             return ResponseEntity
                     .badRequest()
@@ -44,13 +44,13 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<?> updateUser(@Valid @RequestBody UserRegisterForm registerForm) {
-        return ResponseEntity.ok(userService.update(registerForm));
+        return ResponseEntity.ok(userService.updateUser(registerForm));
     }
 
     @DeleteMapping
     public ResponseEntity<?> deleteUser(@RequestParam(name = "id") Long id) {
         try {
-            return ResponseEntity.ok(userService.delete(id));
+            return ResponseEntity.ok(userService.deleteDelete(id));
         } catch (NotFoundException e) {
             return ResponseEntity
                     .notFound()
