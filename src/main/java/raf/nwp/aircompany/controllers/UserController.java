@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import raf.nwp.aircompany.dtos.UserRegisterForm;
 import raf.nwp.aircompany.exceptions.ExistingUsernameException;
+import raf.nwp.aircompany.exceptions.NotFoundException;
 import raf.nwp.aircompany.services.UserService;
 
 import javax.validation.Valid;
@@ -38,6 +39,22 @@ public class UserController {
             return ResponseEntity
                     .badRequest()
                     .body(e.getMessage());
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserRegisterForm registerForm) {
+        return ResponseEntity.ok(userService.update(registerForm));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteUser(@RequestParam(name = "id") Long id) {
+        try {
+            return ResponseEntity.ok(userService.delete(id));
+        } catch (NotFoundException e) {
+            return ResponseEntity
+                    .notFound()
+                    .build();
         }
     }
 }
