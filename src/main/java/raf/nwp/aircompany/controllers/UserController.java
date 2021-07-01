@@ -19,7 +19,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping(path = "all")
     public ResponseEntity<?> getAllUsers() {
         var allUsers = userService.findAllUsers();
         return ResponseEntity.ok(allUsers);

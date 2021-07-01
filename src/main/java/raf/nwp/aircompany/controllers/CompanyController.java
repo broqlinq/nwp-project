@@ -19,7 +19,7 @@ public class CompanyController {
         this.companyService = companyService;
     }
 
-    @GetMapping
+    @GetMapping(path = "all")
     public ResponseEntity<?> getAllCompanies() {
         var allCompanies = companyService.findAllCompanies();
         return ResponseEntity.ok(allCompanies);
