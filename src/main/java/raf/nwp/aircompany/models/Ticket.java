@@ -3,7 +3,7 @@ package raf.nwp.aircompany.models;
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 
-@Entity
+@Entity(name = "tickets_2")
 public class Ticket {
 
     @Id
@@ -22,17 +22,21 @@ public class Ticket {
     private OffsetDateTime returnDate;
 
     @Column(nullable = false)
+    private Boolean oneWay;
+
+    @Column(nullable = false)
     private Long count;
 
     public Ticket() {
     }
 
-    public Ticket(Long id, Company company, Flight flight, OffsetDateTime departureDate, OffsetDateTime returnDate, Long count) {
+    public Ticket(Long id, Company company, Flight flight, OffsetDateTime departureDate, OffsetDateTime returnDate, Boolean oneWay, Long count) {
         this.id = id;
         this.company = company;
         this.flight = flight;
         this.departureDate = departureDate;
         this.returnDate = returnDate;
+        this.oneWay = oneWay;
         this.count = count;
     }
 
@@ -74,6 +78,14 @@ public class Ticket {
 
     public void setReturnDate(OffsetDateTime returnDate) {
         this.returnDate = returnDate;
+    }
+
+    public Boolean getOneWay() {
+        return oneWay;
+    }
+
+    public void setOneWay(Boolean oneWay) {
+        this.oneWay = oneWay;
     }
 
     public Long getCount() {

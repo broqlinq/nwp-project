@@ -51,4 +51,21 @@ public class Mappers {
                 ticket.getReturnDate(),
                 ticket.getCount());
     }
+
+    public static TicketDto ticketToDto(Ticket ticket) {
+        var company = ticket.getCompany().getName();
+        var flight = flightToTicketFlightDto(ticket.getFlight());
+        return new TicketDto(
+                ticket.getDepartureDate(),
+                ticket.getReturnDate(),
+                flight,
+                company,
+                ticket.getCount());
+    }
+
+    private static TicketFlightDto flightToTicketFlightDto(Flight flight) {
+        return new TicketFlightDto(
+                flight.getOrigin().getName(),
+                flight.getDestination().getName());
+    }
 }
