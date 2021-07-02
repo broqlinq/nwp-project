@@ -1,6 +1,8 @@
 package raf.nwp.aircompany.services;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import raf.nwp.aircompany.dtos.PageResponse;
 import raf.nwp.aircompany.dtos.TicketDto;
 import raf.nwp.aircompany.dtos.TicketForm;
 import raf.nwp.aircompany.exceptions.NotFoundException;
@@ -48,7 +50,25 @@ public class TicketService {
         return Mappers.ticketToDto(ticket);
     }
 
-    public List<TicketDto> findTicketsByUser(String username) {
-        return null;
+    public PageResponse<TicketDto> findAllTickets(int page, int count) {
+        var pageable = PageRequest.of(page, count);
+        var tickets = ticketRepository.findAll(pageable)
+                .map(Mappers::ticketToDto);
+        return PageResponse.of(tickets);
+    }
+
+    public PageResponse<TicketDto> findTicketsByCompanyName(String companyName, int page, int count) {
+        var pageable = PageRequest.of(page, count);
+        var tickets = ticketRepository.findTicketsByCompanyName(companyName, pageable)
+                .map(Mappers::ticketToDto);
+        return PageResponse.of(tickets);
+    }
+
+    public PageResponse<TicketDto> filterTickets(String companyName, Boolean oneWay, int page, int count) {
+        var pageable = PageRequest.of(page, count);
+        var tickets = ticketRepository
+                .findTicketsByCompanyNameAAndOneWay(companyName, oneWay, pageable)
+                .map(Mappers::ticketToDto);
+        return PageResponse.of(tickets);
     }
 }

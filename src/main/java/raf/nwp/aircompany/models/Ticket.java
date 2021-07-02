@@ -3,7 +3,7 @@ package raf.nwp.aircompany.models;
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 
-@Entity(name = "tickets_2")
+@Entity
 public class Ticket {
 
     @Id
