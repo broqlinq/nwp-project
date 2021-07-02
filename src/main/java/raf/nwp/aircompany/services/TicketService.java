@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import raf.nwp.aircompany.dtos.PageResponse;
 import raf.nwp.aircompany.dtos.TicketDto;
 import raf.nwp.aircompany.dtos.TicketForm;
+import raf.nwp.aircompany.dtos.TicketUpdateForm;
 import raf.nwp.aircompany.exceptions.NotFoundException;
 import raf.nwp.aircompany.models.Ticket;
 import raf.nwp.aircompany.repositories.CityRepository;
@@ -70,5 +71,28 @@ public class TicketService {
                 .findTicketsByCompanyNameAAndOneWay(companyName, oneWay, pageable)
                 .map(Mappers::ticketToDto);
         return PageResponse.of(tickets);
+    }
+
+    public TicketDto updateTicket(@Valid TicketUpdateForm form) {
+        var ticket = ticketRepository.findById(form.id())
+                .orElseThrow(() -> new NotFoundException("No ticket with id `" + form.flightId() + "` was found"));
+
+        var flight = flightRepository.findById(form.flightId())
+                .orElseThrow(() -> new NotFoundException("No flight with id `" + form.flightId() + "` was found"));
+
+        var company = companyRepository.findCompanyByName(form.companyName())
+                .orElseThrow(() -> new NotFoundException("No company with name `" + form.companyName() + "` was found"));
+
+        if (form.returnDate().isBefore(form.departureDate()))
+            throw new IllegalArgumentException("Return date must be after departure date");
+
+        ticket.setCompany(company);
+        ticket.setFlight(flight);
+        ticket.setDepartureDate(form.departureDate());
+        ticket.setReturnDate(form.returnDate());
+        ticket.setCount(form.count());
+
+        ticket = ticketRepository.save(ticket);
+        return Mappers.ticketToDto(ticket);
     }
 }

@@ -18,6 +18,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 //    List<Ticket> findTicketsByOneWay(@Param(value = "oneWay") Boolean oneWay);
     @Query(value = "SELECT t FROM Ticket t " +
             "WHERE (:companyName IS NULL OR t.company.name = :companyName) " +
-            "AND (:oneWay IS NULL OR t.oneWay = :oneWay)")
+            "AND (:oneWay IS NULL OR (:oneWay = TRUE AND t.returnDate IS NULL) OR (:oneWay = FALSE AND t.returnDate IS NOT NULL))")
     Page<Ticket> findTicketsByCompanyNameAAndOneWay(@Param(value = "companyName") String companyName, @Param(value = "oneWay") Boolean oneWay, Pageable pageable);
 }
