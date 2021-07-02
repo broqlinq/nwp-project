@@ -11,8 +11,6 @@ import java.util.List;
 
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
-
-
     @Query(value = "SELECT c FROM Flight c " +
             "WHERE (:origin IS NULL OR c.origin.name = :origin)" +
             "AND (:destination IS NULL OR c.destination.name = :destination)")

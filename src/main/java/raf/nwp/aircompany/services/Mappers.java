@@ -56,6 +56,7 @@ public class Mappers {
         var company = ticket.getCompany().getName();
         var flight = flightToTicketFlightDto(ticket.getFlight());
         return new TicketDto(
+                ticket.getId(),
                 ticket.getDepartureDate(),
                 ticket.getReturnDate(),
                 flight,
