@@ -35,7 +35,7 @@ public class TicketController {
 //    }
 
     @PostMapping(path = "create")
-    public ResponseEntity<?> createTicket(@Valid TicketForm form) {
+    public ResponseEntity<?> createTicket(@Valid @RequestBody TicketForm form) {
         try {
             return ResponseEntity.ok(ticketService.createTicket(form));
         } catch (NotFoundException e) {

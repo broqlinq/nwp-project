@@ -25,7 +25,7 @@ public class Mappers {
     }
 
     public static CompanyDto companyToDto(Company company) {
-        return new CompanyDto(company.getName());
+        return new CompanyDto(company.getId(), company.getName());
     }
 
     public static Company dtoToCompany(CompanyDto companyDto) {

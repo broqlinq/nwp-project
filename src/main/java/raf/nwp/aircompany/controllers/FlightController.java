@@ -36,7 +36,7 @@ public class FlightController {
         } catch (NotFoundException e) {
             return ResponseEntity
                     .badRequest()
-                    .body(e.getMessage());
+                    .body(e);
         }
     }
 
