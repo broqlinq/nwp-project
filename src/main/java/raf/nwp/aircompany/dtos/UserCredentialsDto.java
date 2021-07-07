@@ -12,6 +12,6 @@ public record UserCredentialsDto(
 
         @NotNull(message = "Password cannot be null")
         @Length(min = 6, max = 32, message = "Password length must be 6-32 characters long")
-        @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,32}$", message = "Password must only uppercase and lowercase english letters, and at least one digit")
+        @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,32}$", message = "Password must only uppercase and lowercase english letters, and at least one digit")
         String password
 ) {}

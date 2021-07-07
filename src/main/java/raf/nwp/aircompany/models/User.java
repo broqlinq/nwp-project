@@ -85,5 +85,5 @@ public class User {
                 '}';
     }
 
-    public enum Type { ADMIN, REGULAR }
+    public enum Type { REGULAR, ADMIN }
 }

@@ -14,7 +14,7 @@ import raf.nwp.aircompany.repositories.FlightRepository;
 import raf.nwp.aircompany.repositories.TicketRepository;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.time.OffsetDateTime;
 
 @Service
 public class TicketService {
@@ -61,6 +61,22 @@ public class TicketService {
     public PageResponse<TicketDto> findTicketsByCompanyName(String companyName, int page, int count) {
         var pageable = PageRequest.of(page, count);
         var tickets = ticketRepository.findTicketsByCompanyName(companyName, pageable)
+                .map(Mappers::ticketToDto);
+        return PageResponse.of(tickets);
+    }
+
+    public PageResponse<TicketDto> filterTickets(
+            String origin,
+            String destination,
+            OffsetDateTime departureDate,
+            OffsetDateTime returnDate,
+            String companyName,
+            Boolean oneWay,
+            int page,
+            int count) {
+        var pageable = PageRequest.of(page, count);
+        var tickets = ticketRepository
+                .filterTickets(origin, destination, departureDate, returnDate, companyName, oneWay, pageable)
                 .map(Mappers::ticketToDto);
         return PageResponse.of(tickets);
     }

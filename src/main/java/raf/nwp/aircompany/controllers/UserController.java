@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "user")
+@CrossOrigin("*")
 public class UserController {
 
     private final UserService userService;
@@ -33,12 +34,13 @@ public class UserController {
 
     @PostMapping(path = "register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegisterForm registerForm) {
+        System.out.println(registerForm);
         try {
             return ResponseEntity.ok(userService.registerUser(registerForm));
         } catch (ExistingUsernameException e) {
             return ResponseEntity
                     .badRequest()
-                    .body(e.getMessage());
+                    .body(e);
         }
     }
 

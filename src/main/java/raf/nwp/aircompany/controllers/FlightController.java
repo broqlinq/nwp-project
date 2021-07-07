@@ -8,6 +8,7 @@ import raf.nwp.aircompany.services.FlightService;
 
 @RestController
 @RequestMapping(path = "flight")
+@CrossOrigin("*")
 public class FlightController {
 
     private final FlightService flightService;

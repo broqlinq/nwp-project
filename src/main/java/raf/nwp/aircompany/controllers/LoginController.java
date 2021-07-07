@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "auth")
+@CrossOrigin("*")
 public class LoginController {
 
     private final LoginService loginService;
@@ -22,8 +23,8 @@ public class LoginController {
     @PostMapping
     public ResponseEntity<?> authenticate(@Valid @RequestBody UserCredentialsDto credentials) {
         try {
-            var token = loginService.generateJwt(credentials);
-            return ResponseEntity.ok(token);
+            var userData = loginService.generateJwt(credentials);
+            return ResponseEntity.ok(userData);
         } catch (InvalidCredentialsException e) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
