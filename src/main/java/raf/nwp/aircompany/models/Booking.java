@@ -15,7 +15,8 @@ public class Booking {
     @Column(nullable = false)
     private Integer count;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(nullable = false)
     private Ticket ticket;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
@@ -25,8 +26,11 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(Long id, User user) {
+    public Booking(Long id, Boolean available, Integer count, Ticket ticket, User user) {
         this.id = id;
+        this.available = available;
+        this.count = count;
+        this.ticket = ticket;
         this.user = user;
     }
 

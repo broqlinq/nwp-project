@@ -8,6 +8,6 @@ public record TicketDto(
         OffsetDateTime returnDate,
         TicketFlightDto flight,
         String company,
-        Long count
+        Integer count
 ) {
 }

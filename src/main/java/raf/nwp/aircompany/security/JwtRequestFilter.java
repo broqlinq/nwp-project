@@ -1,5 +1,6 @@
 package raf.nwp.aircompany.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,21 +36,26 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         final var token = authHeader.split(" ")[1].trim();
-        final var username = jwtManager.extractUsername(token);
-        if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
-        var userDetails = userAuthService.loadUserByUsername(username);
-        if (!jwtManager.tokenValid(token, userDetails)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        try {
+            final var username = jwtManager.extractUsername(token);
+            if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-        var authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-        filterChain.doFilter(request, response);
+            var userDetails = userAuthService.loadUserByUsername(username);
+            if (!jwtManager.tokenValid(token, userDetails)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            var authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+            filterChain.doFilter(request, response);
+        } catch (ExpiredJwtException e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has expired");
+        }
     }
 }

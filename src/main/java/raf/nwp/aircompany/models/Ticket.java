@@ -2,6 +2,7 @@ package raf.nwp.aircompany.models;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Entity
 public class Ticket {
@@ -25,12 +26,15 @@ public class Ticket {
     private Boolean oneWay;
 
     @Column(nullable = false)
-    private Long count;
+    private Integer count;
+
+    @OneToMany(mappedBy = "ticket", fetch = FetchType.LAZY)
+    private List<Booking> booking;
 
     public Ticket() {
     }
 
-    public Ticket(Long id, Company company, Flight flight, OffsetDateTime departureDate, OffsetDateTime returnDate, Boolean oneWay, Long count) {
+    public Ticket(Long id, Company company, Flight flight, OffsetDateTime departureDate, OffsetDateTime returnDate, Boolean oneWay, Integer count, List<Booking> booking) {
         this.id = id;
         this.company = company;
         this.flight = flight;
@@ -38,6 +42,7 @@ public class Ticket {
         this.returnDate = returnDate;
         this.oneWay = oneWay;
         this.count = count;
+        this.booking = booking;
     }
 
     public Long getId() {
@@ -88,11 +93,19 @@ public class Ticket {
         this.oneWay = oneWay;
     }
 
-    public Long getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(Long count) {
+    public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public List<Booking> getBooking() {
+        return booking;
+    }
+
+    public void setBooking(List<Booking> booking) {
+        this.booking = booking;
     }
 }

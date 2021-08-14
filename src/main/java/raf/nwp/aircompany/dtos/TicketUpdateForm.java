@@ -14,8 +14,7 @@ public record TicketUpdateForm(
         Long flightId,
         @NotNull
         String companyName,
-        @NotNull
-        @Min(value = 1, message = "Ticket count must be positive integer")
-        Long count
+        @NotNull @Min(value = 1, message = "Ticket count must be positive integer")
+        Integer count
 ) {
 }

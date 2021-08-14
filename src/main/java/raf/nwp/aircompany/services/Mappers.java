@@ -2,10 +2,7 @@ package raf.nwp.aircompany.services;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import raf.nwp.aircompany.dtos.*;
-import raf.nwp.aircompany.models.Company;
-import raf.nwp.aircompany.models.Flight;
-import raf.nwp.aircompany.models.Ticket;
-import raf.nwp.aircompany.models.User;
+import raf.nwp.aircompany.models.*;
 
 import java.util.List;
 
@@ -66,7 +63,17 @@ public class Mappers {
 
     private static TicketFlightDto flightToTicketFlightDto(Flight flight) {
         return new TicketFlightDto(
+                flight.getId(),
                 flight.getOrigin().getName(),
                 flight.getDestination().getName());
+    }
+
+    public static BookingDto bookingToDto(Booking booking) {
+        return new BookingDto(
+                booking.getId(),
+                booking.getAvailable(),
+                booking.getCount(),
+                ticketToDto(booking.getTicket()),
+                userToDto(booking.getUser()));
     }
 }

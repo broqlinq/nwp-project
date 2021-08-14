@@ -9,7 +9,7 @@ public record TicketForm(
         OffsetDateTime departureDate,
         OffsetDateTime returnDate,
         @Min(value = 1, message = "Ticket count must be positive integer")
-        Long count,
+        Integer count,
         @NotNull
         Long companyId,
         @NotNull

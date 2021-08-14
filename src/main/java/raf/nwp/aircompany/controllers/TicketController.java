@@ -8,6 +8,7 @@ import raf.nwp.aircompany.exceptions.NotFoundException;
 import raf.nwp.aircompany.services.TicketService;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.time.OffsetDateTime;
 
 @RestController
@@ -33,6 +34,15 @@ public class TicketController {
 //            @RequestParam(name = "count") int count) {
 //        return ResponseEntity.ok(ticketService.findTicketsByCompanyName(companyName, page, count));
 //    }
+
+    @GetMapping(path = "{id}")
+    public ResponseEntity<?> findTicketById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(ticketService.findTicketById(id));
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @PostMapping(path = "create")
     public ResponseEntity<?> createTicket(@Valid @RequestBody TicketForm form) {
@@ -68,9 +78,20 @@ public class TicketController {
             return ResponseEntity.ok(ticketService.updateTicket(form));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
-                    .body(e);
+                    .body(e.getMessage());
         } catch (NotFoundException e) {
             return ResponseEntity.notFound()
+                    .build();
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteTicket(@RequestParam(name = "id") Long id) {
+        try {
+            return ResponseEntity.ok(ticketService.deleteTicket(id));
+        } catch (NotFoundException e) {
+            return ResponseEntity
+                    .notFound()
                     .build();
         }
     }

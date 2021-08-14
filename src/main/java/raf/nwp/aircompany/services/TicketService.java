@@ -15,6 +15,7 @@ import raf.nwp.aircompany.repositories.TicketRepository;
 
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Service
 public class TicketService {
@@ -35,7 +36,9 @@ public class TicketService {
     }
 
     public TicketDto createTicket(@Valid TicketForm form) {
-        if (form.returnDate().isBefore(form.departureDate()))
+        var oneWay = form.returnDate() == null;
+
+        if (!oneWay && form.returnDate().isBefore(form.departureDate()))
             throw new IllegalArgumentException("Return date must be after departure date");
 
         var company = companyRepository
@@ -46,7 +49,7 @@ public class TicketService {
                 .findById(form.flightId())
                 .orElseThrow(() -> new NotFoundException("No flight with id `" + form.flightId() + "` was found"));
 
-        var ticket = new Ticket(null, company, flight, form.departureDate(), form.returnDate(), form.returnDate() == null, form.count());
+        var ticket = new Ticket(null, company, flight, form.departureDate(), form.returnDate(), oneWay, form.count(), List.of());
         ticket = ticketRepository.save(ticket);
         return Mappers.ticketToDto(ticket);
     }
@@ -90,6 +93,8 @@ public class TicketService {
     }
 
     public TicketDto updateTicket(@Valid TicketUpdateForm form) {
+        var oneWay = form.returnDate() == null;
+
         var ticket = ticketRepository.findById(form.id())
                 .orElseThrow(() -> new NotFoundException("No ticket with id `" + form.flightId() + "` was found"));
 
@@ -99,7 +104,7 @@ public class TicketService {
         var company = companyRepository.findCompanyByName(form.companyName())
                 .orElseThrow(() -> new NotFoundException("No company with name `" + form.companyName() + "` was found"));
 
-        if (form.returnDate().isBefore(form.departureDate()))
+        if (!oneWay && form.returnDate().isBefore(form.departureDate()))
             throw new IllegalArgumentException("Return date must be after departure date");
 
         ticket.setCompany(company);
@@ -109,6 +114,19 @@ public class TicketService {
         ticket.setCount(form.count());
 
         ticket = ticketRepository.save(ticket);
+        return Mappers.ticketToDto(ticket);
+    }
+
+    public TicketDto findTicketById(Long id) {
+        return ticketRepository.findById(id)
+                .map(Mappers::ticketToDto)
+                .orElseThrow(() -> new NotFoundException("No ticket with id `" + id + "` was found"));
+    }
+
+    public TicketDto deleteTicket(Long id) {
+        var ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("No ticket with id `" + id + "` was found"));
+        ticketRepository.delete(ticket);
         return Mappers.ticketToDto(ticket);
     }
 }
