@@ -28,13 +28,10 @@ public class Ticket {
     @Column(nullable = false)
     private Integer count;
 
-    @OneToMany(mappedBy = "ticket", fetch = FetchType.LAZY)
-    private List<Booking> booking;
-
     public Ticket() {
     }
 
-    public Ticket(Long id, Company company, Flight flight, OffsetDateTime departureDate, OffsetDateTime returnDate, Boolean oneWay, Integer count, List<Booking> booking) {
+    public Ticket(Long id, Company company, Flight flight, OffsetDateTime departureDate, OffsetDateTime returnDate, Boolean oneWay, Integer count) {
         this.id = id;
         this.company = company;
         this.flight = flight;
@@ -42,7 +39,6 @@ public class Ticket {
         this.returnDate = returnDate;
         this.oneWay = oneWay;
         this.count = count;
-        this.booking = booking;
     }
 
     public Long getId() {
@@ -101,11 +97,4 @@ public class Ticket {
         this.count = count;
     }
 
-    public List<Booking> getBooking() {
-        return booking;
-    }
-
-    public void setBooking(List<Booking> booking) {
-        this.booking = booking;
-    }
 }

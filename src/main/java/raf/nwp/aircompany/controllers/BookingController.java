@@ -6,6 +6,8 @@ import raf.nwp.aircompany.dtos.BookingRequest;
 import raf.nwp.aircompany.exceptions.NotFoundException;
 import raf.nwp.aircompany.services.BookingService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "booking")
 @CrossOrigin("*")
@@ -35,6 +37,18 @@ public class BookingController {
             return ResponseEntity
                     .notFound()
                     .build();
+        }
+    }
+
+    @PostMapping(path = "buy")
+    public ResponseEntity<?> simulateBuyTickets(@RequestBody List<Long> ids) {
+        try {
+            var bookings = bookingService.simulateBuyTickets(ids);
+            return ResponseEntity.ok(bookings);
+        } catch (IllegalStateException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
         }
     }
 

@@ -1,6 +1,7 @@
 package raf.nwp.aircompany.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import raf.nwp.aircompany.dtos.BookingDto;
 import raf.nwp.aircompany.exceptions.NotFoundException;
 import raf.nwp.aircompany.models.Booking;
@@ -28,6 +29,7 @@ public class BookingService {
         this.ticketRepository = ticketRepository;
     }
 
+    @Transactional
     public BookingDto simulateBuyTickets(Long id) {
         var booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("No booking with id `" + id + "` was found"));
@@ -46,14 +48,15 @@ public class BookingService {
         return Mappers.bookingToDto(booking);
     }
 
+    @Transactional
     public List<BookingDto> simulateBuyTickets(List<Long> ids) {
         var bookings = bookingRepository.findAllById(ids);
 
         var allValid = bookings.stream()
                 .allMatch(booking -> {
-                    var ticketCount = booking.getCount();
-                    var ticket = booking.getTicket();
-                    return ticket.getCount() < ticketCount;
+                    var ticketToBuy = booking.getCount();
+                    var totalTickets = booking.getTicket().getCount();
+                    return totalTickets >= ticketToBuy;
                 });
 
         if (!allValid)
@@ -64,7 +67,11 @@ public class BookingService {
             Integer newCount = ticket.getCount() - booking.getCount();
             ticket.setCount(newCount);
             ticketRepository.save(ticket);
-            bookingRepository.save(booking);
+            if (ticket.getCount() == 0) {
+                ticketRepository.deleteById(ticket.getId());
+            } else {
+                bookingRepository.deleteById(booking.getId());
+            }
         });
 
         return bookings.stream()
@@ -78,12 +85,12 @@ public class BookingService {
 
         var departureDate = booking.getTicket().getDepartureDate();
         var now = OffsetDateTime.now();
-        var hours = Duration.between(departureDate, now).toHours();
+        var hours = Duration.between(now, departureDate).toHours();
 
         if (hours < 24)
             throw new IllegalStateException("Delete booking failed; Booking can be deleted at least 24 hours before time of departure.");
 
-        bookingRepository.delete(booking);
+        bookingRepository.deleteById(booking.getId());
         return Mappers.bookingToDto(booking);
     }
 

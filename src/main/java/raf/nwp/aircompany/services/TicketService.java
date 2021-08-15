@@ -49,7 +49,7 @@ public class TicketService {
                 .findById(form.flightId())
                 .orElseThrow(() -> new NotFoundException("No flight with id `" + form.flightId() + "` was found"));
 
-        var ticket = new Ticket(null, company, flight, form.departureDate(), form.returnDate(), oneWay, form.count(), List.of());
+        var ticket = new Ticket(null, company, flight, form.departureDate(), form.returnDate(), oneWay, form.count());
         ticket = ticketRepository.save(ticket);
         return Mappers.ticketToDto(ticket);
     }

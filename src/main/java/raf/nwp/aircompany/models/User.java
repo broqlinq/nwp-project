@@ -1,7 +1,6 @@
 package raf.nwp.aircompany.models;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class User {
@@ -20,18 +19,14 @@ public class User {
     @Column(nullable = false)
     private Type type;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Booking> bookings;
-
     public User() {
     }
 
-    public User(Long id, String username, String password, Type type, List<Booking> bookings) {
+    public User(Long id, String username, String password, Type type) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.type = type;
-        this.bookings = bookings;
     }
 
     public Long getId() {
@@ -66,14 +61,6 @@ public class User {
         this.type = type;
     }
 
-    public List<Booking> getReservations() {
-        return bookings;
-    }
-
-    public void setReservations(List<Booking> bookings) {
-        this.bookings = bookings;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -81,7 +68,6 @@ public class User {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", type=" + type +
-                ", bookings=" + ((bookings != null) ? bookings.size() : null) +
                 '}';
     }
 

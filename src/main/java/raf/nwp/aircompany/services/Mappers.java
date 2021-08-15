@@ -4,8 +4,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import raf.nwp.aircompany.dtos.*;
 import raf.nwp.aircompany.models.*;
 
-import java.util.List;
-
 public class Mappers {
 
     public static UserDto userToDto(User user) {
@@ -17,8 +15,7 @@ public class Mappers {
                 null,
                 registerForm.username(),
                 passwordEncoder.encode(registerForm.password()),
-                registerForm.type(),
-                (registerForm.type() == User.Type.REGULAR) ? List.of() : null);
+                registerForm.type());
     }
 
     public static CompanyDto companyToDto(Company company) {

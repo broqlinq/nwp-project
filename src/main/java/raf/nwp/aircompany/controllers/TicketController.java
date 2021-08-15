@@ -2,6 +2,7 @@ package raf.nwp.aircompany.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import raf.nwp.aircompany.dtos.TicketFilter;
 import raf.nwp.aircompany.dtos.TicketForm;
 import raf.nwp.aircompany.dtos.TicketUpdateForm;
 import raf.nwp.aircompany.exceptions.NotFoundException;
@@ -70,6 +71,20 @@ public class TicketController {
             @RequestParam(name = "page") int page,
             @RequestParam(name = "count") int count) {
         return ResponseEntity.ok(ticketService.filterTickets(origin, destination, departureDate, returnDate, companyName, oneWay, page, count));
+    }
+
+    @PostMapping(path = "filter")
+    public ResponseEntity<?> filterTickets(@RequestBody TicketFilter filter) {
+        var tickets = ticketService.filterTickets(
+                filter.origin(),
+                filter.destination(),
+                filter.departureDate(),
+                filter.returnDate(),
+                filter.company(),
+                filter.oneWay(),
+                filter.page(),
+                filter.count());
+        return ResponseEntity.ok(tickets);
     }
 
     @PutMapping
