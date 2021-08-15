@@ -1,10 +1,12 @@
 package raf.nwp.aircompany.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import raf.nwp.aircompany.dtos.CompanyDto;
 import raf.nwp.aircompany.exceptions.ExistingResourceException;
 import raf.nwp.aircompany.exceptions.NotFoundException;
 import raf.nwp.aircompany.repositories.CompanyRepository;
+import raf.nwp.aircompany.repositories.TicketRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +16,11 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
 
-    public CompanyService(CompanyRepository companyRepository) {
+    private final TicketRepository ticketRepository;
+
+    public CompanyService(CompanyRepository companyRepository, TicketRepository ticketRepository) {
         this.companyRepository = companyRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     public List<CompanyDto> findAllCompanies() {
@@ -41,7 +46,7 @@ public class CompanyService {
     }
 
     public CompanyDto updateCompany(CompanyDto companyDto) {
-        var company = companyRepository.findCompanyByName(companyDto.name())
+        var company = companyRepository.findById(companyDto.id())
                 .orElseThrow(() -> new NotFoundException("No company with name `" + companyDto.name() + "` was found"));
 
         if (company.getName().equals(companyDto.name())) {
@@ -53,19 +58,25 @@ public class CompanyService {
         return companyDto;
     }
 
+    @Transactional
     public CompanyDto deleteCompany(Long id) {
         var company = companyRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("No company with id `" + id + "` was found"));
 
+        this.ticketRepository.deleteAllByCompany(company);
+
         companyRepository.delete(company);
         return Mappers.companyToDto(company);
     }
 
+    @Transactional
     public CompanyDto deleteCompany(CompanyDto companyDto) {
         var company = companyRepository
                 .findCompanyByName(companyDto.name())
                 .orElseThrow(() -> new NotFoundException("No company with name `" + companyDto.name() + "` was found"));
+
+        this.ticketRepository.deleteAllByCompany(company);
 
         companyRepository.delete(company);
         return companyDto;

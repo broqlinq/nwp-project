@@ -6,12 +6,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.parameters.P;
+import raf.nwp.aircompany.models.Company;
 import raf.nwp.aircompany.models.Ticket;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
+
+    List<Ticket> findAllByCompany(Company company);
+
+    void deleteAllByCompany(Company company);
 
     @Query(value = "SELECT t FROM Ticket t WHERE t.company.name = :companyName")
     Page<Ticket> findTicketsByCompanyName(@Param(value = "companyName") String companyName, Pageable pageable);

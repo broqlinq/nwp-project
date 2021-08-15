@@ -26,8 +26,8 @@ public class CompanyController {
         return ResponseEntity.ok(allCompanies);
     }
 
-    @GetMapping(path = "get")
-    public ResponseEntity<?> getCompanyByName(@RequestParam(name = "name") String name) {
+    @PostMapping(path = "get")
+    public ResponseEntity<?> getCompanyByName(@RequestBody String name) {
         var company = companyService.findCompanyByName(name);
         return ResponseEntity.of(company);
     }
@@ -39,7 +39,7 @@ public class CompanyController {
         } catch (ExistingResourceException e) {
             return ResponseEntity
                     .badRequest()
-                    .body(e);
+                    .body(e.getMessage());
         }
     }
 

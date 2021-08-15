@@ -1,6 +1,7 @@
 package raf.nwp.aircompany.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Company {
@@ -11,6 +12,9 @@ public class Company {
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Ticket> tickets;
 
     public Company() {
     }
